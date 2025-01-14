@@ -2,16 +2,8 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+
 from alembic import context
-import datetime, json
-import audit_alembic
-
-def get_user_version():
-    now = datetime.datetime.now().isoformat()
-    response =json.dumps({"user": "r0my", "version": now})
-    return response
-
-auditor = audit_alembic.Auditor.create(user_version=get_user_version())
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -73,9 +65,7 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, 
-            target_metadata=target_metadata,
-            on_version_apply=auditor.listen
+            connection=connection, target_metadata=target_metadata
         )
 
         with context.begin_transaction():
