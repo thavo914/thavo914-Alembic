@@ -1,14 +1,23 @@
 services:
-  db:
-    image: postgres:13.3-alpine
-    volumes:
-      - ./db_data:/var/lib/postgresql/data
+  mysql:
+    image: mysql:8.0.39
+    container_name: mysql_8_0
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: test_db
+      MYSQL_USER: thangvo
+      MYSQL_PASSWORD: thangvo123
     ports:
-      - "5433:5432"
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
 
 volumes:
-  db_data:
+  mysql-data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
