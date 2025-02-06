@@ -1,8 +1,8 @@
 """initial migrate tables
 
-Revision ID: 6967b26de77f
-Revises: e22097ec53a5
-Create Date: 2025-02-05 16:50:00.156415
+Revision ID: d2a4f86992ba
+Revises: 868e77a0383a
+Create Date: 2025-02-06 09:59:47.457784
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision: str = '6967b26de77f'
-down_revision: Union[str, None] = 'e22097ec53a5'
+revision: str = 'd2a4f86992ba'
+down_revision: Union[str, None] = '868e77a0383a'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -214,6 +214,13 @@ def upgrade() -> None:
     sa.Column('ToDate', sa.Date(), nullable=True),
     sa.Column('Note', sa.String(length=1000, collation='utf8mb4_unicode_ci'), nullable=True),
     sa.PrimaryKeyConstraint('AllowanceStaffHistoryId')
+    )
+    op.create_table('App',
+    sa.Column('AppId', mysql.INTEGER(display_width=11), nullable=False),
+    sa.Column('Name', mysql.VARCHAR(length=128), nullable=False),
+    sa.Column('Dir', mysql.VARCHAR(length=32), nullable=False),
+    sa.Column('Desc', mysql.TEXT(), nullable=True),
+    sa.PrimaryKeyConstraint('AppId')
     )
     op.create_table('Bank',
     sa.Column('BankId', mysql.INTEGER(display_width=10), nullable=False),
@@ -1258,6 +1265,19 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('OrgBranchId')
     )
     op.create_index('uq_Branch_Org', 'OrgBranch', ['BranchId', 'OrgId'], unique=True)
+    op.create_table('OrgBranchAudit',
+    sa.Column('revision', mysql.INTEGER(display_width=6), nullable=False),
+    sa.Column('ActionDate', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
+    sa.Column('OrgId', mysql.INTEGER(display_width=10), nullable=False),
+    sa.Column('IsVirtual', mysql.INTEGER(display_width=1), nullable=False),
+    sa.Column('CreatedDate', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
+    sa.Column('CreatedStaffId', mysql.INTEGER(display_width=10), server_default=sa.text("'0'"), nullable=False),
+    sa.Column('action', sa.String(length=8, collation='utf8mb4_unicode_ci'), server_default=sa.text("'insert'"), nullable=True),
+    sa.Column('BranchId', mysql.INTEGER(display_width=10), nullable=True),
+    sa.Column('UpdatedDate', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
+    sa.Column('UpdatedStaffId', mysql.INTEGER(display_width=10), server_default=sa.text("'0'"), nullable=True),
+    sa.PrimaryKeyConstraint('revision')
+    )
     op.create_table('OrgHierarchy',
     sa.Column('OrgHierarchyId', mysql.INTEGER(display_width=11), nullable=False),
     sa.Column('NameEn', sa.String(length=255, collation='utf8mb4_unicode_ci'), nullable=False),
@@ -1456,6 +1476,31 @@ def upgrade() -> None:
     )
     op.create_index('fk_RegistedMobileDevice_RegistedBy_idx', 'RegistedMobileDevice', ['RegistedBy'], unique=False)
     op.create_index('fk_RegistedMobileDevice_Staff_idx', 'RegistedMobileDevice', ['StaffId'], unique=False)
+    op.create_table('RegularGroup',
+    sa.Column('RegularGroupId', mysql.INTEGER(display_width=10), nullable=False),
+    sa.Column('CompanyId', mysql.INTEGER(display_width=10), nullable=False),
+    sa.Column('NameVi', sa.String(length=32, collation='utf8mb4_unicode_ci'), nullable=False),
+    sa.Column('NameEn', sa.String(length=32, collation='utf8mb4_unicode_ci'), nullable=False),
+    sa.Column('Ordering', mysql.INTEGER(display_width=10), server_default=sa.text("'0'"), nullable=False),
+    sa.Column('RootId', mysql.INTEGER(display_width=10), nullable=False),
+    sa.Column('ParentId', mysql.INTEGER(display_width=10), nullable=False),
+    sa.Column('Lft', mysql.INTEGER(display_width=10), nullable=False),
+    sa.Column('Rgt', mysql.INTEGER(display_width=10), nullable=False),
+    sa.Column('Level', mysql.INTEGER(display_width=10), nullable=False),
+    sa.PrimaryKeyConstraint('RegularGroupId')
+    )
+    op.create_table('RegulationsAndPolicies',
+    sa.Column('Id', mysql.INTEGER(display_width=11), nullable=False),
+    sa.Column('Title', sa.String(length=4096, collation='utf8mb4_unicode_ci'), nullable=True),
+    sa.Column('Path', sa.String(length=4096, collation='utf8mb4_unicode_ci'), nullable=True),
+    sa.Column('Priority', mysql.INTEGER(display_width=11), server_default=sa.text("'99999'"), nullable=True),
+    sa.Column('IsDeleted', mysql.INTEGER(display_width=11), server_default=sa.text("'0'"), nullable=True),
+    sa.Column('CreatedDate', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
+    sa.Column('CreatedBy', mysql.INTEGER(display_width=11), nullable=True),
+    sa.Column('UpdatedDate', sa.DateTime(), nullable=True),
+    sa.Column('UpdatedBy', mysql.INTEGER(display_width=11), nullable=True),
+    sa.PrimaryKeyConstraint('Id')
+    )
     op.create_table('Relationship',
     sa.Column('RelationshipId', mysql.INTEGER(display_width=10), nullable=False),
     sa.Column('RelationshipGroupId', mysql.INTEGER(display_width=10), nullable=False),
@@ -2645,6 +2690,17 @@ def upgrade() -> None:
     sa.Column('UpdatedBy', mysql.INTEGER(display_width=11), nullable=True),
     sa.PrimaryKeyConstraint('StaffSelfAssessmentId')
     )
+    op.create_table('StaffSignature',
+    sa.Column('StaffSignatureId', mysql.INTEGER(display_width=11), nullable=False),
+    sa.Column('StaffId', mysql.INTEGER(display_width=11), nullable=True),
+    sa.Column('Signature', mysql.LONGTEXT(), nullable=True),
+    sa.Column('State', mysql.INTEGER(display_width=11), server_default=sa.text("'0'"), nullable=True),
+    sa.Column('CreatedBy', mysql.INTEGER(display_width=11), nullable=True),
+    sa.Column('CreatedDate', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
+    sa.Column('UpdatedDate', sa.DateTime(), nullable=True),
+    sa.Column('UpdatedBy', mysql.INTEGER(display_width=11), nullable=True),
+    sa.PrimaryKeyConstraint('StaffSignatureId')
+    )
     op.create_table('StaffSignatureTracking',
     sa.Column('StaffSignaturetTrackingId', mysql.INTEGER(display_width=11), nullable=False),
     sa.Column('StaffId', mysql.INTEGER(display_width=11), nullable=True),
@@ -2710,6 +2766,17 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('Tag')
     )
     op.create_index('Tag_UNIQUE', 'TaskTag', ['Tag'], unique=True)
+    op.create_table('Team',
+    sa.Column('TeamId', mysql.INTEGER(display_width=10), nullable=False),
+    sa.Column('NameVi', mysql.VARCHAR(length=128), nullable=False),
+    sa.Column('CompanyId', mysql.INTEGER(display_width=10), nullable=False),
+    sa.Column('DepartmentId', mysql.INTEGER(display_width=10), nullable=False),
+    sa.Column('State', mysql.INTEGER(display_width=1), server_default=sa.text("'1'"), nullable=False, comment='0  - không ho?t ??ng\n1 - ho?t ??ng'),
+    sa.Column('NameEn', mysql.VARCHAR(length=128), nullable=True),
+    sa.Column('AnnualLeaveTranning', sa.Double(asdecimal=True), nullable=True),
+    sa.Column('IsTimekeeping', mysql.SMALLINT(display_width=1), server_default=sa.text("'1'"), nullable=True, comment='0: no checkin; 1 checkin; null get parent value (Company)'),
+    sa.PrimaryKeyConstraint('TeamId')
+    )
     op.create_table('TeamLeader',
     sa.Column('TeamId', mysql.INTEGER(display_width=10), nullable=False),
     sa.Column('WorkProfileId', mysql.INTEGER(display_width=10), nullable=False),
@@ -4603,52 +4670,11 @@ def upgrade() -> None:
     )
     op.create_index('fk_MenuItemViewing_MenuItemId_idx', 'MenuItemViewing', ['MenuItemId'], unique=False)
     op.create_index('fk_MenuItemViewing_ViewingId_idx', 'MenuItemViewing', ['ViewingId'], unique=False)
-    op.drop_table('menu_item')
-    op.drop_table('user')
-    op.drop_table('account')
-    op.alter_column('Team', 'State',
-               existing_type=mysql.INTEGER(unsigned=True),
-               comment='0  - không ho?t ??ng\n1 - ho?t ??ng',
-               existing_comment='0  - kh├┤ng ho?t ??ng\r\n1 - ho?t ??ng',
-               existing_nullable=False,
-               existing_server_default=sa.text("'1'"))
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
-    op.alter_column('Team', 'State',
-               existing_type=mysql.INTEGER(unsigned=True),
-               comment='0  - kh├┤ng ho?t ??ng\r\n1 - ho?t ??ng',
-               existing_comment='0  - không ho?t ??ng\n1 - ho?t ??ng',
-               existing_nullable=False,
-               existing_server_default=sa.text("'1'"))
-    op.create_table('account',
-    sa.Column('id', mysql.INTEGER(), autoincrement=True, nullable=False),
-    sa.Column('name', mysql.VARCHAR(length=50), nullable=False),
-    sa.Column('description', mysql.VARCHAR(length=200), nullable=True),
-    sa.PrimaryKeyConstraint('id'),
-    mysql_collate='utf8mb4_0900_ai_ci',
-    mysql_default_charset='utf8mb4',
-    mysql_engine='InnoDB'
-    )
-    op.create_table('user',
-    sa.Column('UserId', mysql.INTEGER(), autoincrement=True, nullable=False),
-    sa.Column('name', mysql.VARCHAR(length=255), nullable=True),
-    sa.PrimaryKeyConstraint('UserId'),
-    mysql_collate='utf8mb4_0900_ai_ci',
-    mysql_default_charset='utf8mb4',
-    mysql_engine='InnoDB'
-    )
-    op.create_table('menu_item',
-    sa.Column('MenuItemId', mysql.INTEGER(), autoincrement=True, nullable=False),
-    sa.Column('CreatedBy', mysql.INTEGER(), autoincrement=False, nullable=True),
-    sa.ForeignKeyConstraint(['CreatedBy'], ['user.UserId'], name='menu_item_ibfk_1'),
-    sa.PrimaryKeyConstraint('MenuItemId'),
-    mysql_collate='utf8mb4_0900_ai_ci',
-    mysql_default_charset='utf8mb4',
-    mysql_engine='InnoDB'
-    )
     op.drop_index('fk_MenuItemViewing_ViewingId_idx', table_name='MenuItemViewing')
     op.drop_index('fk_MenuItemViewing_MenuItemId_idx', table_name='MenuItemViewing')
     op.drop_table('MenuItemViewing')
@@ -4926,6 +4952,7 @@ def downgrade() -> None:
     op.drop_index('fk_TeamLeader_WorkProfile_idx', table_name='TeamLeader')
     op.drop_index('fk_TeamLeader_Team_idx', table_name='TeamLeader')
     op.drop_table('TeamLeader')
+    op.drop_table('Team')
     op.drop_index('Tag_UNIQUE', table_name='TaskTag')
     op.drop_table('TaskTag')
     op.drop_table('TaskStatus')
@@ -4936,6 +4963,7 @@ def downgrade() -> None:
     op.drop_index('id_StaffId', table_name='StaffWorkPlace')
     op.drop_table('StaffWorkPlace')
     op.drop_table('StaffSignatureTracking')
+    op.drop_table('StaffSignature')
     op.drop_table('StaffSelfAssessment')
     op.drop_table('StaffSalaryTaxSettlement')
     op.drop_table('StaffSalaryDetails_t')
@@ -5021,6 +5049,8 @@ def downgrade() -> None:
     op.drop_table('RelationshipGroup')
     op.drop_index('fk_Relationship_RelationshipGroup_idx', table_name='Relationship')
     op.drop_table('Relationship')
+    op.drop_table('RegulationsAndPolicies')
+    op.drop_table('RegularGroup')
     op.drop_index('fk_RegistedMobileDevice_Staff_idx', table_name='RegistedMobileDevice')
     op.drop_index('fk_RegistedMobileDevice_RegistedBy_idx', table_name='RegistedMobileDevice')
     op.drop_table('RegistedMobileDevice')
@@ -5046,6 +5076,7 @@ def downgrade() -> None:
     op.drop_table('OrgOffice')
     op.drop_table('OrgManagerResp')
     op.drop_table('OrgHierarchy')
+    op.drop_table('OrgBranchAudit')
     op.drop_index('uq_Branch_Org', table_name='OrgBranch')
     op.drop_table('OrgBranch')
     op.drop_table('Org20230228')
@@ -5150,6 +5181,7 @@ def downgrade() -> None:
     op.drop_index('fk_BankBranch_Bank_idx', table_name='BankBranch')
     op.drop_table('BankBranch')
     op.drop_table('Bank')
+    op.drop_table('App')
     op.drop_table('AllowanceStaffHistory')
     op.drop_index('fk_AllowanceStaff_WorkProfile_idx', table_name='AllowanceStaff')
     op.drop_index('fk_AllowanceStaff_Allowance_idx', table_name='AllowanceStaff')
