@@ -325,14 +325,6 @@ class BranchServiceQuality(Base):
     UpdatedDate: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
 
 
-t_ByMonth = Table(
-    'ByMonth', Base.metadata,
-    Column('WorkScheduleId', INTEGER(10), nullable=False),
-    Column('MonthId', INTEGER(10), nullable=False),
-    Index('fk_ByMonth_Month_idx', 'MonthId'),
-    Index('fk_ByMonth_WorkSchedule_idx', 'WorkScheduleId')
-)
-
 
 class Candidate(Base):
     __tablename__ = 'Candidate'
@@ -511,38 +503,6 @@ class Company(Base):
     AbsenceConfig: Mapped[List['AbsenceConfig']] = relationship('AbsenceConfig', back_populates='Company_')
     Branch: Mapped[List['Branch']] = relationship('Branch', back_populates='Company_')
     Department: Mapped[List['Department']] = relationship('Department', back_populates='Company_')
-
-
-t_ComplaintAboutReason = Table(
-    'ComplaintAboutReason', Base.metadata,
-    Column('ComplaintAboutReasonId', INTEGER(10), nullable=False),
-    Column('ComplaintReasonGroupId', INTEGER(11), nullable=False),
-    Column('Ordering', INTEGER(10), nullable=False),
-    Column('Reason', String(128, 'utf8mb4_unicode_ci'), nullable=False),
-    Column('State', INTEGER(1), nullable=False, server_default=text("'0'")),
-    Column('CreatedAt', INTEGER(10), nullable=False),
-    Column('CreatedBy', INTEGER(10), nullable=False),
-    Column('LanguageId', INTEGER(10), nullable=False)
-)
-
-
-t_ComplaintChannel = Table(
-    'ComplaintChannel', Base.metadata,
-    Column('ComplaintChannelId', INTEGER(10), nullable=False),
-    Column('Name', String(32, 'utf8mb4_unicode_ci'), nullable=False),
-    Column('State', INTEGER(1), nullable=False, server_default=text("'1'")),
-    comment='callcenter, app, web, reception...'
-)
-
-
-t_ComplaintReasonGroup = Table(
-    'ComplaintReasonGroup', Base.metadata,
-    Column('ComplaintReasonGroupId', INTEGER(10), nullable=False),
-    Column('Name', String(32, 'utf8mb4_unicode_ci'), nullable=False),
-    Column('State', INTEGER(1), nullable=False, server_default=text("'1'")),
-    comment='Gom nhóm các complaint. Các nhóm không chồng lấn.'
-)
-
 
 class ContactPoint(Base):
     __tablename__ = 'ContactPoint'
@@ -851,24 +811,6 @@ class Holiday(Base):
     CreatedDate: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
 
 
-t_ImportLuong = Table(
-    'ImportLuong', Base.metadata,
-    Column('MaNV', VARCHAR(50)),
-    Column('Column1', String(50, 'utf8mb4_unicode_ci')),
-    Column('Column2', String(50, 'utf8mb4_unicode_ci')),
-    Column('BHXH', INTEGER(11)),
-    Column('Capbac', String(50, 'utf8mb4_unicode_ci')),
-    Column('Ythuc', INTEGER(11)),
-    Column('Comtrua', INTEGER(11)),
-    Column('DongPhuc', INTEGER(11)),
-    Column('Column3', INTEGER(11)),
-    Column('KN', INTEGER(11)),
-    Column('Khac', INTEGER(11)),
-    Column('StaffId', INTEGER(11)),
-    Column('WorkContractId', INTEGER(11)),
-    Column('WorkProfileId', INTEGER(11))
-)
-
 
 class InComeByJobConfig(Base):
     __tablename__ = 'InComeByJobConfig'
@@ -1061,25 +1003,6 @@ class InsuranceHospital(Base):
     Ordering: Mapped[int] = mapped_column(INTEGER(10), server_default=text("'1'"))
 
 
-t_InsuranceSession = Table(
-    'InsuranceSession', Base.metadata,
-    Column('InsuranceSessionId', INTEGER(10), nullable=False),
-    Column('InsuranceType', SMALLINT(6), nullable=False),
-    Column('FilePath', String(255, 'utf8mb4_unicode_ci'), nullable=False),
-    Column('UploadedDate', DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP')),
-    Column('TotalRecord', INTEGER(11), nullable=False),
-    Column('TotalAmount', DECIMAL(15, 2), nullable=False),
-    Column('Note', String(500, 'utf8mb4_unicode_ci')),
-    Column('ErrorNote', String(255, 'utf8mb4_unicode_ci')),
-    Column('IsActive', TINYINT(1), nullable=False, server_default=text("'1'")),
-    Column('CreatedDate', DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP')),
-    Column('CreatedStaffId', INTEGER(11), nullable=False),
-    Column('UpdatedDate', DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP')),
-    Column('UpdatedStaffId', INTEGER(11), nullable=False),
-    Index('PK_InsuranceSession', 'InsuranceSessionId')
-)
-
-
 class Language(Base):
     __tablename__ = 'Language'
 
@@ -1224,71 +1147,6 @@ class MonthlyBonusImportDetail(Base):
     Amount: Mapped[Optional[decimal.Decimal]] = mapped_column(DECIMAL(18, 2))
     CreatedDate: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
     CreatedBy: Mapped[Optional[int]] = mapped_column(INTEGER(11))
-
-
-t_NgayCong2 = Table(
-    'NgayCong2', Base.metadata,
-    Column('Stt', INTEGER(11)),
-    Column('Mã NV', String(50, 'utf8mb4_unicode_ci')),
-    Column('Họ tên', String(50, 'utf8mb4_unicode_ci')),
-    Column('Công ty', String(50, 'utf8mb4_unicode_ci')),
-    Column('Chức danh', String(100, 'utf8mb4_unicode_ci')),
-    Column('Loại HĐ', String(50, 'utf8mb4_unicode_ci')),
-    Column('Chi nhánh', String(50, 'utf8mb4_unicode_ci')),
-    Column('Ngày vào làm', String(50, 'utf8mb4_unicode_ci')),
-    Column('Ca làm việc', String(50, 'utf8mb4_unicode_ci')),
-    Column('Tổng cộng', INTEGER(11)),
-    Column('Ghi chú k chấm công', String(50, 'utf8mb4_unicode_ci')),
-    Column('Số giờ lv thực tế (HIS)', String(50, 'utf8mb4_unicode_ci')),
-    Column('Nghỉ phép', String(50, 'utf8mb4_unicode_ci')),
-    Column('Nghỉ chế độ', String(50, 'utf8mb4_unicode_ci')),
-    Column('Nghỉ lễ/tết', String(50, 'utf8mb4_unicode_ci')),
-    Column('Tổng công tính lương', String(50, 'utf8mb4_unicode_ci')),
-    Column('Công chuẩn', INTEGER(11)),
-    Column('Lương cơ bản', Double(10, True)),
-    Column('Thưởng Ý thức và Tuân thủ/Thưởng Hiệụ quả hoạt động', String(50, 'utf8mb4_unicode_ci')),
-    Column('Phụ cấp Cơm trưa', String(50, 'utf8mb4_unicode_ci')),
-    Column('Phụ cấp Đồng phục', String(50, 'utf8mb4_unicode_ci')),
-    Column('Tổng thu nhập theo ngày công', Double(10, True)),
-    Column('Thưởng CRM/CS (C.Mai)', String(50, 'utf8mb4_unicode_ci')),
-    Column('Thưởng CLDV', String(50, 'utf8mb4_unicode_ci')),
-    Column('Thưởng Quản lý chung', String(50, 'utf8mb4_unicode_ci')),
-    Column('Thưởng hiệu quả quản lý', String(50, 'utf8mb4_unicode_ci')),
-    Column('Thưởng Ebitda', String(50, 'utf8mb4_unicode_ci')),
-    Column('Thưởng Vinmec', String(50, 'utf8mb4_unicode_ci')),
-    Column('Thưởng an ninh', String(50, 'utf8mb4_unicode_ci')),
-    Column('Thưởng Lễ/Tết', String(50, 'utf8mb4_unicode_ci')),
-    Column('Tổng thưởng', String(50, 'utf8mb4_unicode_ci')),
-    Column('PC Gửi xe/Công tác', String(50, 'utf8mb4_unicode_ci')),
-    Column('Phụ cấp chứng chỉ hành nghề', String(50, 'utf8mb4_unicode_ci')),
-    Column('Phụ cấp khác', String(50, 'utf8mb4_unicode_ci')),
-    Column('Tổng phụ cấp', String(50, 'utf8mb4_unicode_ci')),
-    Column('Trừ khác', String(50, 'utf8mb4_unicode_ci')),
-    Column('Tổng thu nhập trước thuế', Double(10, True)),
-    Column('Mức lương tham gia BHXH', String(50, 'utf8mb4_unicode_ci')),
-    Column('BHYT (1,5%)', String(50, 'utf8mb4_unicode_ci')),
-    Column('BHXH (8%)', String(50, 'utf8mb4_unicode_ci')),
-    Column('BHTN (1%)', String(50, 'utf8mb4_unicode_ci')),
-    Column('NLĐ đóng BHXH (10.5%)', String(50, 'utf8mb4_unicode_ci')),
-    Column('NLĐ đóng phí Công đoàn (1%)', String(50, 'utf8mb4_unicode_ci')),
-    Column('BHXH (17%', String(50, 'utf8mb4_unicode_ci')),
-    Column('TNLĐ / BNN (0.5%)', String(50, 'utf8mb4_unicode_ci')),
-    Column('BHYT (3%)', String(50, 'utf8mb4_unicode_ci')),
-    Column('BHTN 1%', String(50, 'utf8mb4_unicode_ci')),
-    Column('Doanh nghiệp đóng BHXH 21.5%', String(50, 'utf8mb4_unicode_ci')),
-    Column('Doanh nghiệp đóng Công đoàn 2%', String(50, 'utf8mb4_unicode_ci')),
-    Column('Không tính thuế (Phụ cấp cơm trưa/ Đồng phục)', String(50, 'utf8mb4_unicode_ci')),
-    Column('TỔNG THU NHẬP CHỊU THUẾ', Double(10, True)),
-    Column('Đối tượng tính Thuế TNCN', String(50, 'utf8mb4_unicode_ci')),
-    Column('Cam kết', String(50, 'utf8mb4_unicode_ci')),
-    Column('Số người phụ thuộc', String(50, 'utf8mb4_unicode_ci')),
-    Column('TỔNG THU NHẬP TÍNH THUẾ', String(50, 'utf8mb4_unicode_ci')),
-    Column('Thu Tiền thuế TNCN', String(50, 'utf8mb4_unicode_ci')),
-    Column('Thực lãnh', INTEGER(11)),
-    Column('Cty đóng hộ BHXH', String(50, 'utf8mb4_unicode_ci')),
-    Column('Thu hộ tiền BHXH (21.5%', String(50, 'utf8mb4_unicode_ci')),
-    Column('Chuyển khoản', INTEGER(11))
-)
 
 
 class Notification(Base):
@@ -1449,56 +1307,6 @@ class Org(Base):
     Level: Mapped[Optional[int]] = mapped_column(INTEGER(11))
     BranchId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
     IsSolvingTicket: Mapped[Optional[int]] = mapped_column(SMALLINT(2))
-
-
-t_Org2 = Table(
-    'Org2', Base.metadata,
-    Column('OrgId', INTEGER(10), nullable=False, server_default=text("'0'")),
-    Column('OrgCode', String(200, 'utf8mb4_unicode_ci'), nullable=False),
-    Column('OrgName', String(200, 'utf8mb4_unicode_ci'), nullable=False),
-    Column('CompanyId', INTEGER(10), nullable=False),
-    Column('ParentId', INTEGER(11), nullable=False, server_default=text("'0'")),
-    Column('DefaultBranchId', INTEGER(10)),
-    Column('NumAnnualLeaveTraining', INTEGER(5), nullable=False),
-    Column('IsViewAllBranch', INTEGER(1), nullable=False),
-    Column('IsTimekeeping', INTEGER(1), nullable=False),
-    Column('IsActive', INTEGER(1), nullable=False),
-    Column('PosLeft', INTEGER(5), nullable=False, server_default=text("'0'")),
-    Column('PosRight', INTEGER(5), nullable=False, server_default=text("'0'")),
-    Column('RoleCode', String(32, 'utf8mb4_unicode_ci')),
-    Column('CreatedDate', DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP')),
-    Column('CreatedStaffId', INTEGER(11), nullable=False, server_default=text("'0'")),
-    Column('UpdatedDate', DateTime, server_default=text('CURRENT_TIMESTAMP')),
-    Column('UpdatedStaffId', INTEGER(11), server_default=text("'0'")),
-    Column('ParentDeleteOrgId', INTEGER(11)),
-    Column('Level', INTEGER(11)),
-    Column('BranchId', INTEGER(11))
-)
-
-
-t_Org20230228 = Table(
-    'Org20230228', Base.metadata,
-    Column('OrgId', INTEGER(10), nullable=False, server_default=text("'0'")),
-    Column('OrgCode', VARCHAR(200), nullable=False),
-    Column('OrgName', VARCHAR(200), nullable=False),
-    Column('CompanyId', INTEGER(10), nullable=False),
-    Column('ParentId', INTEGER(11), nullable=False, server_default=text("'0'")),
-    Column('DefaultBranchId', INTEGER(10)),
-    Column('NumAnnualLeaveTraining', INTEGER(5), nullable=False),
-    Column('IsViewAllBranch', INTEGER(1), nullable=False),
-    Column('IsTimekeeping', INTEGER(1), nullable=False),
-    Column('IsActive', INTEGER(1), nullable=False),
-    Column('PosLeft', INTEGER(5), nullable=False, server_default=text("'0'")),
-    Column('PosRight', INTEGER(5), nullable=False, server_default=text("'0'")),
-    Column('RoleCode', VARCHAR(32)),
-    Column('CreatedDate', DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP')),
-    Column('CreatedStaffId', INTEGER(11), nullable=False, server_default=text("'0'")),
-    Column('UpdatedDate', DateTime, server_default=text('CURRENT_TIMESTAMP')),
-    Column('UpdatedStaffId', INTEGER(11), server_default=text("'0'")),
-    Column('ParentDeleteOrgId', INTEGER(11)),
-    Column('Level', INTEGER(11))
-)
-
 
 class OrgBranch(Base):
     __tablename__ = 'OrgBranch'
@@ -1962,19 +1770,6 @@ class RolePermission(Base):
     CreatedDate: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, server_default=text('CURRENT_TIMESTAMP'))
 
 
-t_RoleWorkProfilePosition_formapping = Table(
-    'RoleWorkProfilePosition_formapping', Base.metadata,
-    Column('RoleId', INTEGER(11)),
-    Column('RoleName', String(255, 'utf8mb4_unicode_ci')),
-    Column('WorkProfilePositionId', INTEGER(11)),
-    Column('State', TINYINT(4), server_default=text("'1'")),
-    Column('CreatedBy', INTEGER(11)),
-    Column('CreatedDate', DateTime, server_default=text('CURRENT_TIMESTAMP')),
-    Column('UpdatedBy', INTEGER(11)),
-    Column('UpdatedDate', DateTime)
-)
-
-
 class SalaryAllowances(Base):
     __tablename__ = 'SalaryAllowances'
 
@@ -2396,36 +2191,6 @@ class StaffGroup(Base):
     Rgt: Mapped[int] = mapped_column(INTEGER(10))
     Level: Mapped[int] = mapped_column(INTEGER(10))
     Ordering: Mapped[Optional[int]] = mapped_column(INTEGER(10), server_default=text("'0'"))
-
-
-t_StaffHistory = Table(
-    'StaffHistory', Base.metadata,
-    Column('StaffId', INTEGER(10), nullable=False),
-    Column('StaffCode', VARCHAR(16), nullable=False),
-    Column('IdNumber', VARCHAR(16)),
-    Column('IdNumberIssuedAt', Date),
-    Column('IdNumberIssuedBy', INTEGER(11)),
-    Column('PassportNumber', VARCHAR(16)),
-    Column('NationalInsuranceNumber', VARCHAR(16)),
-    Column('TaxNumber', VARCHAR(16)),
-    Column('UserId', INTEGER(10)),
-    Column('FullName', VARCHAR(64)),
-    Column('FullNameNoSign', VARCHAR(64)),
-    Column('LastName', VARCHAR(16)),
-    Column('LastNameNoSign', VARCHAR(16)),
-    Column('DateOfBirth', Date),
-    Column('Photo', VARCHAR(128)),
-    Column('PrimaryEmail', VARCHAR(255)),
-    Column('CreatedAt', INTEGER(10), nullable=False),
-    Column('CreatedBy', INTEGER(10), nullable=False),
-    Column('State', INTEGER(1), nullable=False, server_default=text("'1'")),
-    Column('GenderId', INTEGER(10), nullable=False),
-    Column('DegreeId', INTEGER(10)),
-    Column('UpdatedAt', INTEGER(10)),
-    Column('UpdatedBy', INTEGER(10)),
-    Column('Nationality', INTEGER(10)),
-    Column('FlushedAt', INTEGER(11), nullable=False)
-)
 
 
 class StaffIdentityPaper(Base):
