@@ -22,8 +22,9 @@ source_engine =  create_engine(f"mysql+pymysql://thangvo:{encoded_password}@10.1
 # source_engine =  create_engine(f"mysql+pymysql://thangvo:{encoded_password}@10.101.222.10:3306/in") #STAGING
 
 # source_engine = create_engine(f"mysql+pymysql://{username}:{encoded_password}@{host}:{port}/{database}")
+backup_engine = create_engine(f"mysql+pymysql://thangvo:{encoded_password}@10.101.222.10:3306/backup")
 
-target_engine = create_engine(f"mysql+pymysql://thangvo:{encoded_password_DEV}@10.97.11.122:3306/in")
+target_engine = create_engine(f"mysql+pymysql://thangvo:{encoded_password}@10.101.222.10:3306/in")
 
 metadata = MetaData()
 
@@ -44,7 +45,10 @@ metadata = MetaData()
 
 
 tables_to_migrate = [
-    'Branch'
+    # 'WorkSchedule',
+    'WorkShiftByWeekDay','WorkShiftByMonthDay','InfrequentExcludeWorkShift','InfrequentIncludeWorkShift','WorkShift'
+    # 'Staff'
+    # 'TimeKeeper'
     # Add other table names here
 ]
 
@@ -57,7 +61,8 @@ for table_name in tables_to_migrate:
         table_b = Table(backup_table_name, metadata, *[column.copy() for column in table_a.columns])
 
     # Read Data from Source
-        df = pd.read_sql(f"SELECT * FROM {table_name}", source_engine)
+        df = pd.read_sql(f"SELECT * FROM {table_name }", source_engine)
+        # df = pd.read_sql(f"SELECT * FROM {table_name }", source_engine)
         df1 = pd.read_sql(f"SELECT * FROM {table_name}", target_engine)
         print(f"Data read from source and target for {table_name}")
     # Write Data to Target
@@ -70,8 +75,8 @@ for table_name in tables_to_migrate:
         try:
             session.execute(text(f'SET FOREIGN_KEY_CHECKS=0'))
             session.execute(text(f'DROP TABLE IF EXISTS {backup_table_name}'))
-            table_b.create(target_engine, checkfirst=True)
-            df1.to_sql(backup_table_name, target_engine, if_exists="append", index=False)
+            table_b.create(backup_engine, checkfirst=True)
+            df1.to_sql(backup_table_name, backup_engine, if_exists="replace", index=False)
             session.execute(text(f'TRUNCATE TABLE {table_name}'))
             df.to_sql(table_name, target_engine, if_exists="append", index=False)
 
@@ -88,4 +93,3 @@ for table_name in tables_to_migrate:
         print(f"Failed to process table {table_name}: {e}")
 
 print("All table migrations completed!")
-
