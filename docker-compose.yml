@@ -14,8 +14,30 @@ services:
     networks:
       - app-network
 
+  spark-master:
+    image: bitnami/spark:3.5.5
+    container_name: spark-master
+    environment:
+      - SPARK_MODE=master
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+    volumes:
+      - spark-data:/opt/spark/data
+
+  spark-worker:
+    image: bitnami/spark:3.5.5
+    container_name: spark-worker
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+    depends_on:
+      - spark-master
+
 volumes:
   mysql-data:
+    driver: local
+  spark-data:
     driver: local
 
 networks:
