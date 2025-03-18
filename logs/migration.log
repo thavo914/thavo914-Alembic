@@ -1,0 +1,23 @@
+2025-03-18 15:03:51,745 - INFO - Successfully migrated Staff
+2025-03-18 16:49:43,105 - INFO - 
+Starting migration for table: Staff
+2025-03-18 16:49:43,890 - INFO - Processed 5438 rows from Staff
+2025-03-18 16:49:49,544 - INFO - 
+Migration Summary for Staff:
+==================================================
+Status: Completed
+Rows Processed: 5438
+Duration: 6.44 seconds
+==================================================
+
+2025-03-18 16:52:01,920 - INFO - 
+Starting migration for table: TimeKeeper
+2025-03-18 16:52:04,801 - INFO - Processed 10656 rows from TimeKeeper
+2025-03-18 16:52:13,061 - INFO - 
+Migration Summary for TimeKeeper:
+==================================================
+Status: Completed
+Rows Processed: 10656
+Duration: 11.14 seconds
+==================================================
+
