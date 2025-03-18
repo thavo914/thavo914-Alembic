@@ -20,5 +20,4 @@ users_df.show(truncate=False)
 print("\nDataFrame Schema:")
 users_df.printSchema()
 
-
 spark.stop()

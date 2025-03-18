@@ -1,51 +1,74 @@
-# ⚙️ Database-migration: Alembic Tutorial
-Tutorial: How to Use Alembic in Python for database migration
+# Database Migration Project Structure
 
----
-<br>
+database-migration/
+├── src/                      # Source code directory
+│   ├── config/              # Configuration files
+│   │   ├── __init__.py
+│   │   └── database.py      # Database connection settings, environment handling
+│   │
+│   ├── models/              # Database models
+│   │   ├── __init__.py
+│   │   └── tables.py        # SQLAlchemy table definitions (Staff, WorkProfile, etc.)
+│   │
+│   ├── migrations/          # Migration management
+│   │   ├── __init__.py
+│   │   ├── versions/        # Individual migration scripts
+│   │   └── env.py          # Migration environment configuration
+│   │
+│   └── utils/              # Utility functions
+│       ├── __init__.py
+│       └── helpers.py       # Common functions (password encoding, backup naming)
+│
+├── tests/                   # Test directory
+│   ├── __init__.py
+│   └── test_migrations.py   # Test cases for migrations
+│
+├── scripts/                 # Executable scripts
+│   ├── backup.py           # Database backup functionality
+│   └── migrate.py          # Main migration script
+│
+├── logs/                    # Log directory
+│   └── migration.log       # Migration logs
+│
+├── .env                     # Environment variables
+├── requirements.txt         # Project dependencies
+├── README.md               # Project documentation
+└── alembic.ini             # Alembic configuration
 
-## Table of Contents
-You can find all the turotial in `alembic_tutorial.ipynb` python notebook with the explanations about the following points:
+Key Components:
 
-- 🔧 Database migrations
-- 🔧 What is Alembic?
-- 🔧 Prerequisites
-- 🔧 Alembic: Configuration
-- 🔧 Alembic: Create our first migration
-- 🔍 What is Audit alembic?
+1. src/config/
 
-<br>
+   - Manages database connections
+   - Handles environment variables
+   - Configures logging
+2. src/models/
 
------
+   - Defines table structures
+   - Manages relationships between tables
+   - Contains schema definitions
+3. src/migrations/
 
-## 🔧 Database migrations
-A migration is the process that allows you to modify the structure of the database, these migrations are created to maintain consistency and integrity.
+   - Stores migration scripts
+   - Manages version control
+   - Handles upgrades and rollbacks
+4. src/utils/
 
-![img](img/benefits-migration.png)
+   - Common helper functions
+   - Shared utilities
+   - Reusable code
+5. tests/
 
+   - Unit tests
+   - Integration tests
+   - Test fixtures
+6. scripts/
 
- * ✅ **Version Control**: Avoids manual intervention in the database by maintaining control over schema versions.
+   - Backup automation
+   - Migration execution
+   - Maintenance tasks
+7. logs/
 
-* ✅ **Environment Management**: Facilitates the creation of new environments through the application of migrations, enabling easy reproduction of specific configurations and maintaining coherence between them.
-
-* ✅ **Upgrade & Downgrade**: Another benefit is the ability not only to apply changes but also to revert them. This provides flexibility and security in database management.
-
-* ✅ **Auditing**: Alembic-audit is another library that can be implemented to maintain a chronological record of changes made to the database, facilitating traceability.
-
-* ✅ **CI/CD Integration**: Easily integrates into CI/CD pipelines to apply database changes automatically, streamlining and ensuring consistency in application deployment.
-
-* ✅ **Standardization**: This implementation enables cleaner, structured, and coherent development for defining and applying changes to the database schema. By using templates, script reuse is promoted, ensuring efficient and consistent management of database changes.
-
-## 🔧 What is Alembic?
-
-**Alembic** is a 🐍Python library that enables controlled and automated database migrations. This library utilizes `SQLAlchemy`  and  it allows for the management of changes in the database schema through __scripts__, which describe the modifications and can be applied automatically.
-
----
-
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support%20my%20work-FFDD00?style=flat&labelColor=101010&logo=buy-me-a-coffee&logoColor=white)](https://www.buymeacoffee.com/r0mymendez)
-
-![img](img/alemic-flow.png)
-
----
-
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support%20my%20work-FFDD00?style=flat&labelColor=101010&logo=buy-me-a-coffee&logoColor=white)](https://www.buymeacoffee.com/r0mymendez)
+   - Migration history
+   - Error tracking
+   - Audit trails
