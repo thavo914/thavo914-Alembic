@@ -21,3 +21,25 @@ Rows Processed: 10656
 Duration: 11.14 seconds
 ==================================================
 
+2025-03-19 09:24:27,900 - INFO - 
+Starting migration for table: TimeKeeper
+2025-03-19 09:24:39,424 - INFO - Processed 10656 rows from TimeKeeper
+2025-03-19 09:24:41,546 - INFO - 
+Migration Summary for TimeKeeper:
+==================================================
+Status: Failed
+Rows Processed: 10656
+Duration: 13.65 seconds
+==================================================
+
+2025-03-19 09:30:28,923 - INFO - 
+Starting migration for table: TimeKeeper
+2025-03-19 09:30:39,807 - INFO - Processed 10656 rows from TimeKeeper
+2025-03-19 09:30:56,997 - INFO - 
+Migration Summary for TimeKeeper:
+==================================================
+Status: Completed
+Rows Processed: 10656
+Duration: 28.07 seconds
+==================================================
+

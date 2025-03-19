@@ -13,6 +13,11 @@ def migrate_table(table_name, source_engine, target_engine, logger):
         
         # Read source data
         df = pd.read_sql(f"SELECT * FROM {table_name}", source_engine)
+        # Convert timedelta columns to string or total seconds
+        for column in df.select_dtypes(include=['timedelta64[ns]']).columns:
+            df[column] = df[column].astype(str)
+
+        # Log progress
         logger.log_progress(table_name, len(df))
         
         # Create backup
