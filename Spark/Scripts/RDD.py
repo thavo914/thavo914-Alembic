@@ -1,15 +1,22 @@
 from pyspark.sql import SparkSession
 import requests
 import json
-# Create a SparkSession
-spark = SparkSession.builder.appName('SimpleApp').getOrCreate()
 
+# Create a SparkSession with logging configuration
+spark = SparkSession.builder \
+    .appName('SimpleApp') \
+    .config('spark.eventLog.enabled', 'true') \
+    .config('spark.eventLog.dir', '/tmp/logs') \
+    .config('spark.history.fs.logDirectory', '/tmp/logs') \
+    .getOrCreate()
+
+# Set log level
+spark.sparkContext.setLogLevel("INFO")
 
 # Read JSON from URL
 json_url = "https://jsonplaceholder.typicode.com/users"
 response = requests.get(json_url)
 json_data = response.json()
-
 # Convert JSON to Spark DataFrame
 users_df = spark.createDataFrame(json_data)
 # Show the DataFrame
