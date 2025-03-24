@@ -8,6 +8,9 @@ spark = SparkSession.builder \
     .config('spark.eventLog.enabled', 'true') \
     .config('spark.eventLog.dir', '/tmp/logs') \
     .config('spark.history.fs.logDirectory', '/tmp/logs') \
+    .master('spark://spark-master:7077') \
+    .config('spark.executor.instances', '2') \
+    .config('spark.executor.memory', '2g') \
     .getOrCreate()
 
 # Set log level

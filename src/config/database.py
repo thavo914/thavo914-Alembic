@@ -30,7 +30,11 @@ class DatabaseConfig:
         self.local_user = os.getenv('LOCAL_MYSQL_USER')
         self.local_password = quote_plus(os.getenv('LOCAL_MYSQL_PASSWORD'))
         self.local_database = os.getenv('LOCAL_MYSQL_DATABASE')
-    
+
+        # PROD Environment
+        self.prod_kim_host = os.getenv('PROD_KIM_HOST')
+        self.prod_kim_user = os.getenv('PROD_KIM_USER')
+        self.prod_kim_password = quote_plus(os.getenv('PROD_KIM_PASSWORD'))
     def get_stag_kim_url(self):
         return f"mysql+pymysql://{self.stag_kim_user}:{self.stag_kim_password}@{self.stag_kim_host}:3306/in"
     
@@ -45,3 +49,6 @@ class DatabaseConfig:
     
     def get_local_url(self):
         return f"mysql+pymysql://{self.local_user}:{self.local_password}@{self.local_host}:{self.local_port}/{self.local_database}"
+        
+    def get_prod_kim_url(self):
+        return f"mysql+pymysql://{self.prod_kim_user}:{self.prod_kim_password}@{self.prod_kim_host}:3306/in"
