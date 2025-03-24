@@ -7,6 +7,7 @@ from urllib.parse import quote_plus
 username = "thangvo"
 password = "Thang@2024"
 password_DEV = "WoKfeGkjICCvil6"
+password_STAG = "Thang@2024"
 
 host = "10.97.11.122"
 port = 3306
@@ -15,6 +16,7 @@ database = "archive_data"
 # URL encode the password
 encoded_password = quote_plus(password)
 encoded_password_DEV = quote_plus(password_DEV)
+encoded_password_STAG = quote_plus(password_STAG)
 
 # Define Source & Target Connections
 # source_engine = create_engine(f"mysql+pymysql://{username}:{encoded_password}@{host}:{port}/{database}")
@@ -23,7 +25,8 @@ source_engine =  create_engine(f"mysql+pymysql://thangvo:{encoded_password}@10.1
 
 # source_engine = create_engine(f"mysql+pymysql://{username}:{encoded_password}@{host}:{port}/{database}")
 
-target_engine = create_engine(f"mysql+pymysql://thangvo:{encoded_password_DEV}@10.97.11.122:3306/in")
+# target_engine = create_engine(f"mysql+pymysql://thangvo:{encoded_password_DEV}@10.97.11.122:3306/in")
+target_engine = create_engine(f"mysql+pymysql://thangvo:{encoded_password_STAG}@10.101.222.10:3306/in")
 
 metadata = MetaData()
 
@@ -44,24 +47,33 @@ metadata = MetaData()
 
 
 tables_to_migrate = [
-    'Branch'
+    'TimeKeeper'
     # Add other table names here
 ]
 
 for table_name in tables_to_migrate:
     try:
         print(f"Starting migration for table: {table_name}")
+            # Convert timedelta columns
+        backup_table_name = f"{table_name}_BK20250214"
 
         table_a = Table(table_name, metadata, autoload_with=target_engine)
-        backup_table_name = f"{table_name}_BK20250214"
         table_b = Table(backup_table_name, metadata, *[column.copy() for column in table_a.columns])
 
     # Read Data from Source
-        df = pd.read_sql(f"SELECT * FROM {table_name}", source_engine)
+        df = pd.read_sql(f"SELECT * FROM {table_name} WHERE Day>='2025-03-01' ", source_engine)
         df1 = pd.read_sql(f"SELECT * FROM {table_name}", target_engine)
         print(f"Data read from source and target for {table_name}")
+        
     # Write Data to Target
-
+        for column in df.select_dtypes(include=['timedelta64[ns]']).columns:
+            df[column] = df[column].replace({pd.NaT: None})  # Replace NaT with None
+            df[column] = df[column].apply(lambda x: str(x).split()[-1] if x is not None else None)
+            
+        for column in df1.select_dtypes(include=['timedelta64[ns]']).columns:
+            df1[column] = df1[column].replace({pd.NaT: None})  # Replace NaT with None
+            df1[column] = df1[column].apply(lambda x: str(x).split()[-1] if x is not None else None)
+            # df1[column] = df1[column].astype(str).str.split().str[-1]  # Gets only the time part "HH:MM:SS"
     # Create a session
         Session = sessionmaker(bind=target_engine)
         session = Session()

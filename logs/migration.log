@@ -43,3 +43,190 @@ Rows Processed: 10656
 Duration: 28.07 seconds
 ==================================================
 
+2025-03-20 10:05:49,417 - INFO - 
+Starting migration for table: WorkPlaceChanging
+2025-03-20 10:05:53,726 - INFO - Processed 11928 rows from WorkPlaceChanging
+2025-03-20 10:06:00,164 - INFO - 
+Migration Summary for WorkPlaceChanging:
+==================================================
+Status: Completed
+Rows Processed: 11928
+Duration: 10.75 seconds
+==================================================
+
+2025-03-20 10:06:00,167 - INFO - 
+Starting migration for table: WorkSchedule
+2025-03-20 10:06:24,702 - INFO - Processed 73930 rows from WorkSchedule
+2025-03-20 10:06:44,019 - INFO - 
+Migration Summary for WorkSchedule:
+==================================================
+Status: Failed
+Rows Processed: 73930
+Duration: 43.85 seconds
+==================================================
+
+2025-03-20 10:09:52,365 - INFO - 
+Starting migration for table: WorkPlaceChanging
+2025-03-20 10:09:55,466 - INFO - Processed 11928 rows from WorkPlaceChanging
+2025-03-20 10:09:57,463 - INFO - 
+Migration Summary for WorkPlaceChanging:
+==================================================
+Status: Failed
+Rows Processed: 11928
+Duration: 5.10 seconds
+==================================================
+
+2025-03-20 10:10:30,144 - INFO - 
+Starting migration for table: WorkPlaceChanging
+2025-03-20 10:10:33,265 - INFO - Processed 11928 rows from WorkPlaceChanging
+2025-03-20 10:10:36,523 - INFO - 
+Migration Summary for WorkPlaceChanging:
+==================================================
+Status: Completed
+Rows Processed: 11928
+Duration: 6.38 seconds
+==================================================
+
+2025-03-20 10:10:36,525 - INFO - 
+Starting migration for table: WorkSchedule
+2025-03-20 10:10:46,493 - INFO - Processed 73930 rows from WorkSchedule
+2025-03-20 10:10:56,223 - INFO - 
+Migration Summary for WorkSchedule:
+==================================================
+Status: Failed
+Rows Processed: 73930
+Duration: 19.70 seconds
+==================================================
+
+2025-03-20 10:13:38,691 - INFO - 
+Starting migration for table: WorkPlaceChanging
+2025-03-20 10:13:41,175 - INFO - Processed 11928 rows from WorkPlaceChanging
+2025-03-20 10:13:44,604 - INFO - 
+Migration Summary for WorkPlaceChanging:
+==================================================
+Status: Completed
+Rows Processed: 11928
+Duration: 5.91 seconds
+==================================================
+
+2025-03-20 10:13:44,606 - INFO - 
+Starting migration for table: WorkSchedule
+2025-03-20 10:13:56,236 - INFO - Processed 73930 rows from WorkSchedule
+2025-03-20 10:14:05,660 - INFO - 
+Migration Summary for WorkSchedule:
+==================================================
+Status: Failed
+Rows Processed: 73930
+Duration: 21.05 seconds
+==================================================
+
+2025-03-20 10:30:14,610 - INFO - 
+Starting migration for table: WorkShiftByWeekDay
+2025-03-20 10:32:32,459 - INFO - Processed 587436 rows from WorkShiftByWeekDay
+2025-03-20 10:33:54,182 - INFO - 
+Migration Summary for WorkShiftByWeekDay:
+==================================================
+Status: Completed
+Rows Processed: 587436
+Duration: 219.57 seconds
+==================================================
+
+2025-03-20 10:33:54,193 - INFO - 
+Starting migration for table: WorkShiftByMonthDay
+2025-03-20 10:33:54,521 - INFO - Processed 3143 rows from WorkShiftByMonthDay
+2025-03-20 10:33:55,496 - INFO - 
+Migration Summary for WorkShiftByMonthDay:
+==================================================
+Status: Completed
+Rows Processed: 3143
+Duration: 1.30 seconds
+==================================================
+
+2025-03-20 10:33:55,498 - INFO - 
+Starting migration for table: InfrequentExcludeWorkShift
+2025-03-20 10:35:03,410 - INFO - Processed 424310 rows from InfrequentExcludeWorkShift
+2025-03-20 10:36:31,620 - INFO - 
+Migration Summary for InfrequentExcludeWorkShift:
+==================================================
+Status: Completed
+Rows Processed: 424310
+Duration: 156.12 seconds
+==================================================
+
+2025-03-20 10:36:31,717 - INFO - 
+Starting migration for table: InfrequentIncludeWorkShift
+2025-03-20 10:38:02,021 - INFO - Processed 516587 rows from InfrequentIncludeWorkShift
+2025-03-20 10:40:32,735 - INFO - 
+Migration Summary for InfrequentIncludeWorkShift:
+==================================================
+Status: Completed
+Rows Processed: 516587
+Duration: 241.02 seconds
+==================================================
+
+2025-03-20 10:46:12,454 - INFO - 
+Starting migration for table: WorkSchedule
+2025-03-20 10:46:35,647 - INFO - Processed 73930 rows from WorkSchedule
+2025-03-20 10:46:52,810 - INFO - 
+Migration Summary for WorkSchedule:
+==================================================
+Status: Failed
+Rows Processed: 73930
+Duration: 40.36 seconds
+==================================================
+
+2025-03-20 15:27:30,726 - INFO - 
+Starting migration for table: WorkSchedule
+2025-03-20 15:27:52,984 - INFO - Processed 73934 rows from WorkSchedule
+2025-03-20 15:28:30,565 - INFO - 
+Migration Summary for WorkSchedule:
+==================================================
+Status: Completed
+Rows Processed: 73934
+Duration: 59.84 seconds
+==================================================
+
+2025-03-20 15:44:57,331 - INFO - 
+Starting migration for table: WorkShiftByWeekDay
+2025-03-20 15:46:08,300 - INFO - Processed 587484 rows from WorkShiftByWeekDay
+2025-03-20 15:47:31,851 - INFO - 
+Migration Summary for WorkShiftByWeekDay:
+==================================================
+Status: Completed
+Rows Processed: 587484
+Duration: 154.52 seconds
+==================================================
+
+2025-03-20 15:47:31,866 - INFO - 
+Starting migration for table: WorkShiftByMonthDay
+2025-03-20 15:47:32,192 - INFO - Processed 3143 rows from WorkShiftByMonthDay
+2025-03-20 15:47:32,781 - INFO - 
+Migration Summary for WorkShiftByMonthDay:
+==================================================
+Status: Completed
+Rows Processed: 3143
+Duration: 0.91 seconds
+==================================================
+
+2025-03-20 15:47:32,783 - INFO - 
+Starting migration for table: InfrequentExcludeWorkShift
+2025-03-20 15:48:49,177 - INFO - Processed 424330 rows from InfrequentExcludeWorkShift
+2025-03-20 15:50:24,027 - INFO - 
+Migration Summary for InfrequentExcludeWorkShift:
+==================================================
+Status: Completed
+Rows Processed: 424330
+Duration: 171.24 seconds
+==================================================
+
+2025-03-20 15:50:24,145 - INFO - 
+Starting migration for table: InfrequentIncludeWorkShift
+2025-03-20 15:52:06,368 - INFO - Processed 516600 rows from InfrequentIncludeWorkShift
+2025-03-20 15:54:11,598 - INFO - 
+Migration Summary for InfrequentIncludeWorkShift:
+==================================================
+Status: Completed
+Rows Processed: 516600
+Duration: 227.45 seconds
+==================================================
+

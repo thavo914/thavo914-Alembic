@@ -34,10 +34,65 @@ services:
     depends_on:
       - spark-master
 
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    ports:
+      - "5432:5432"  # Add port mapping
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # Add persistent volume
+    networks:
+      - app-network
+
+  airflow-webserver:
+    image: apache/airflow:2.7.1
+    container_name: airflow-webserver
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__LOAD_EXAMPLES=false
+      - _AIRFLOW_DB_UPGRADE=true
+      - _AIRFLOW_WWW_USER_CREATE=true
+      - _AIRFLOW_WWW_USER_USERNAME=admin
+      - _AIRFLOW_WWW_USER_PASSWORD=admin
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./Spark/Scripts:/opt/spark/scripts
+    ports:
+      - "8081:8080"
+    command: webserver
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+
+  airflow-scheduler:
+    image: apache/airflow:2.7.1
+    container_name: airflow-scheduler
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__LOAD_EXAMPLES=false
+      - _AIRFLOW_DB_UPGRADE=true
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./Spark/Scripts:/opt/spark/scripts
+    command: scheduler
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+
 volumes:
   mysql-data:
     driver: local
   spark-data:
+    driver: local
+  postgres-data:    # Add this new volume
     driver: local
 
 networks:
