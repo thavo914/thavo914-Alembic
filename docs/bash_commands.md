@@ -5,7 +5,7 @@
 ### Container Management
 ```bash
 # Start containers
-docker-compose up -d
+ 
 
 # Stop containers
 docker-compose down
@@ -34,5 +34,15 @@ docker exec airflow-webserver airflow users create \
     --role Admin \
     --email admin@example.com
 
-# Install requirements
-docker exec -u root airflow-webserver pip install -r /opt/spark/requirements.txt
+# Copy Airflow requirements.txt to airflow-webserver
+docker cp requirements-airflow.txt airflow-webserver:/opt/airflow/requirements.txt
+
+# Set permissions and install Airflow requirements
+docker exec -u root airflow-webserver chown -R airflow: /opt/airflow && \
+docker exec -u root airflow-webserver pip install -r /opt/airflow/requirements.txt
+
+# Copy Spark requirements.txt to spark-master
+docker cp requirements-spark.txt spark-master:/opt/spark/requirements.txt
+
+# Install Spark requirements
+docker exec -u root spark-master pip install -r /opt/spark/requirements.txt
