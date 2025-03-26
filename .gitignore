@@ -1,0 +1,20 @@
+# Airflow
+airflow/config/logs/
+airflow/config/*.pid
+airflow/config/*.log
+airflow/config/webserver_config.py
+
+# Airflow runtime files
+*.pid
+*.log
+latest
+
+# Data folder
+/data/
+/data/*
+
+# Ignore specific data files
+*.xlsx
+*.csv
+*.xml
+*.env

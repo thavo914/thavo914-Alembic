@@ -60,8 +60,9 @@ services:
       - _AIRFLOW_WWW_USER_USERNAME=admin
       - _AIRFLOW_WWW_USER_PASSWORD=admin
     volumes:
-      - ./dags:/opt/airflow/dags
+      - ./airflow/dags:/opt/airflow/dags
       - ./Spark/Scripts:/opt/spark/scripts
+      - ./airflow/config:/opt/airflow
     ports:
       - "8081:8080"
     command: webserver
@@ -79,8 +80,9 @@ services:
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - _AIRFLOW_DB_UPGRADE=true
     volumes:
-      - ./dags:/opt/airflow/dags
+      - ./airflow/dags:/opt/airflow/dags
       - ./Spark/Scripts:/opt/spark/scripts
+      - ./airflow/config:/opt/airflow
     command: scheduler
     networks:
       - app-network
@@ -92,7 +94,7 @@ volumes:
     driver: local
   spark-data:
     driver: local
-  postgres-data:    # Add this new volume
+  postgres-data:   
     driver: local
 
 networks:
