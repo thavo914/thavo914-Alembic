@@ -4,8 +4,9 @@
 
 ### Container Management
 ```bash
+
 # Start containers
- 
+ docker-compose up -d
 
 # Stop containers
 docker-compose down
@@ -46,3 +47,12 @@ docker cp requirements-spark.txt spark-master:/opt/spark/requirements.txt
 
 # Install Spark requirements
 docker exec -u root spark-master pip install -r /opt/spark/requirements.txt
+
+# Check Java version in containers
+docker exec spark-master java -version
+docker exec airflow-webserver java -version
+
+# Test DAG execution - Runs a specific DAG for testing purposes
+docker exec -it airflow-webserver bash -c "airflow dags test spark_etl_pipeline 2025-03-26"
+
+

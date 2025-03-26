@@ -96,10 +96,10 @@ def insert_into_mysql(df):
     try:
         # Get database configuration
         db_config = DatabaseConfig()
-        engine = create_engine(db_config.get_prod_kim_url())
+        engine = create_engine(db_config.get_dev_kim_url())
         
         # Add Year column with default value 2024
-        df['Year'] = 2024
+        df['Year'] = 2025
 
         # Sort by StaffCode descending and limit to 5 records
         # df_limited = df.sort_values('StaffCode', ascending=False).head(5)
@@ -117,7 +117,7 @@ def insert_into_mysql(df):
                 UPDATE StaffSalaryTaxSettlement sst
                 INNER JOIN Staff s ON sst.StaffCode = s.StaffCode COLLATE utf8mb4_unicode_ci
                 SET sst.StaffId = s.StaffId
-                WHERE sst.Year = 2024
+                WHERE sst.Year = 2025
             """)
             connection.execute(update_query)
             connection.commit()
@@ -131,7 +131,7 @@ def insert_into_mysql(df):
         print("Database connection closed")
 
 if __name__ == "__main__":
-    excel_path_QT = os.path.join(os.path.dirname(__file__), "..", "data", "PhieuQT2024_upHIS.xlsx")
+    excel_path_QT = os.path.join(os.path.dirname(__file__), "..", "data", "PhieuQT2024_upHIS_uplai26.3.xlsx")
     excel_path_DT = os.path.join(os.path.dirname(__file__), "..", "data", "Mapping.xlsx")
 
     df = read_excel_file(excel_path_QT, excel_path_DT)
