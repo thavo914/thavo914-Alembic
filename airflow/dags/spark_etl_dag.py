@@ -16,34 +16,34 @@ def spark_etl():
             .master('spark://spark-master:7077') \
             .getOrCreate()
             
-        json_url = "https://jsonplaceholder.typicode.com/users"
-        df = spark.read.json(json_url)
-        return df.toPandas().to_dict()
+        # json_url = "https://jsonplaceholder.typicode.com/users"
+        # df = spark.read.json(json_url)
+        # return df.toPandas().to_dict()
     
-    @task()
-    def transform(data):
-        spark = SparkSession.builder \
-            .appName('TransformTask') \
-            .master('spark://spark-master:7077') \
-            .getOrCreate()
+    # @task()
+    # def transform(data):
+    #     spark = SparkSession.builder \
+    #         .appName('TransformTask') \
+    #         .master('spark://spark-master:7077') \
+    #         .getOrCreate()
             
-        df = spark.createDataFrame(data)
-        transformed_df = df.select("id", "name", "email")
-        return transformed_df.toPandas().to_dict()
+    #     df = spark.createDataFrame(data)
+    #     transformed_df = df.select("id", "name", "email")
+    #     return transformed_df.toPandas().to_dict()
 
-    @task()
-    def load(data):
-        spark = SparkSession.builder \
-            .appName('LoadTask') \
-            .master('spark://spark-master:7077') \
-            .getOrCreate()
+    # @task()
+    # def load(data):
+    #     spark = SparkSession.builder \
+    #         .appName('LoadTask') \
+    #         .master('spark://spark-master:7077') \
+    #         .getOrCreate()
             
-        df = spark.createDataFrame(data)
-        print("Final Data:")
-        df.show()
+    #     df = spark.createDataFrame(data)
+    #     print("Final Data:")
+    #     df.show()
     
     raw_data = extract()
-    clean_data = transform(raw_data)
-    load(clean_data)
+    # clean_data = transform(raw_data)
+    # load(clean_data)
 
 dag = spark_etl()
