@@ -1,6 +1,15 @@
 from airflow.decorators import dag, task
-from datetime import datetime
+from datetime import datetime, timedelta  # Add timedelta import
 from pyspark.sql import SparkSession
+from pyspark import SparkContext
+import time
+import socket
+
+def is_port_open(host, port):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    result = sock.connect_ex((host, port))
+    sock.close()
+    return result == 0
 
 @dag(
     schedule_interval="@daily",
@@ -9,41 +18,27 @@ from pyspark.sql import SparkSession
     dag_id='spark_etl_pipeline'
 )
 def spark_etl():
-    @task()
+    @task(retries=3, retry_delay=timedelta(seconds=10))  # Use timedelta directly
     def extract():
-        spark = SparkSession.builder \
-            .appName('ExtractTask') \
-            .master('spark://spark-master:7077') \
-            .getOrCreate()
-            
-        # json_url = "https://jsonplaceholder.typicode.com/users"
-        # df = spark.read.json(json_url)
-        # return df.toPandas().to_dict()
-    
-    # @task()
-    # def transform(data):
-    #     spark = SparkSession.builder \
-    #         .appName('TransformTask') \
-    #         .master('spark://spark-master:7077') \
-    #         .getOrCreate()
-            
-    #     df = spark.createDataFrame(data)
-    #     transformed_df = df.select("id", "name", "email")
-    #     return transformed_df.toPandas().to_dict()
+        # Try to create Spark session with retries
+        max_retries = 3
+        retry_count = 0
+        while retry_count < max_retries:
+            try:
+                spark = SparkSession.builder \
+                    .appName('ExtractTask') \
+                    .master('spark://spark-master:7077') \
+                    .config('spark.network.timeout', '120s') \
+                    .config('spark.executor.heartbeatInterval', '60s') \
+                    .getOrCreate()
+                return
+            except Exception as e:
+                retry_count += 1
+                if retry_count == max_retries:
+                    raise e
+                print(f"Failed to connect to Spark. Retrying in 10 seconds... (Attempt {retry_count}/{max_retries})")
+                time.sleep(10)
 
-    # @task()
-    # def load(data):
-    #     spark = SparkSession.builder \
-    #         .appName('LoadTask') \
-    #         .master('spark://spark-master:7077') \
-    #         .getOrCreate()
-            
-    #     df = spark.createDataFrame(data)
-    #     print("Final Data:")
-    #     df.show()
-    
     raw_data = extract()
-    # clean_data = transform(raw_data)
-    # load(clean_data)
 
 dag = spark_etl()

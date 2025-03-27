@@ -2,12 +2,9 @@ from pyspark.sql import SparkSession
 import requests
 import json
 
-# Create a SparkSession with logging configuration
+# Create a SparkSession without logging configuration
 spark = SparkSession.builder \
     .appName('SimpleApp') \
-    .config('spark.eventLog.enabled', 'true') \
-    .config('spark.eventLog.dir', '/tmp/logs') \
-    .config('spark.history.fs.logDirectory', '/tmp/logs') \
     .master('spark://spark-master:7077') \
     .config('spark.executor.instances', '2') \
     .config('spark.executor.memory', '2g') \

@@ -4,10 +4,10 @@ docker exec -u root spark-master mkdir -p /tmp/logs /tmp/derby
 docker exec -u root spark-master chmod 777 /tmp/logs /tmp/derby
 
 echo Copying RDD.py to Spark container...
-docker cp Spark\Scripts\RDD.py spark-master:/opt/spark/scripts/
+docker cp Spark\Scripts\RDD.py spark-master:/opt/bitnami/spark/scripts/
 
 echo Running Spark script...
-docker exec -it spark-master spark-submit /opt/spark/scripts/RDD.py
+docker exec -it spark-master spark-submit /opt/bitnami/spark/scripts/RDD.py
 
 echo.
 echo Spark UI is available at: http://localhost:8080
