@@ -35,6 +35,15 @@ class DatabaseConfig:
         self.prod_kim_host = os.getenv('PROD_KIM_HOST')
         self.prod_kim_user = os.getenv('PROD_KIM_USER')
         self.prod_kim_password = quote_plus(os.getenv('PROD_KIM_PASSWORD'))
+        
+        # MSSQL Configuration
+        self.mssql_host = os.getenv('MSSQL_HOST')
+        self.mssql_port = os.getenv('MSSQL_PORT')
+        self.mssql_database = os.getenv('MSSQL_DATABASE')
+        self.mssql_username = os.getenv('MSSQL_USERNAME')
+        self.mssql_password = quote_plus(os.getenv('MSSQL_PASSWORD'))
+        self.mssql_driver = quote_plus(os.getenv('MSSQL_DRIVER'))
+
     def get_stag_kim_url(self):
         return f"mysql+pymysql://{self.stag_kim_user}:{self.stag_kim_password}@{self.stag_kim_host}:3306/in"
     
@@ -52,3 +61,6 @@ class DatabaseConfig:
         
     def get_prod_kim_url(self):
         return f"mysql+pymysql://{self.prod_kim_user}:{self.prod_kim_password}@{self.prod_kim_host}:3306/in"
+    
+    def get_mssql_url(self):
+        return f"mssql+pyodbc://{self.mssql_username}:{self.mssql_password}@{self.mssql_host}:{self.mssql_port}/{self.mssql_database}?driver={self.mssql_driver}"
