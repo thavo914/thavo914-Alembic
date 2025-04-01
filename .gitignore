@@ -18,8 +18,3 @@ latest
 *.csv
 *.xml
 *.env
-# Python compiled files
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
