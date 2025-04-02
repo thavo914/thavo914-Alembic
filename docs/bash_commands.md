@@ -55,4 +55,8 @@ docker exec airflow-webserver java -version
 # Test DAG execution - Runs a specific DAG for testing purposes
 docker exec -it airflow-webserver bash -c "airflow dags test spark_etl_pipeline 2025-03-28"
 
+docker exec -it airflow-webserver bash -c "airflow dags test spark_user_etl 2025-04-01"
+
+
+
 
