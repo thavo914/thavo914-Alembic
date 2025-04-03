@@ -41,7 +41,11 @@ docker cp requirements-airflow.txt airflow-webserver:/opt/airflow/requirements.t
 # Set permissions and install Airflow requirements
 docker exec -u root airflow-webserver chown -R airflow: /opt/airflow && \
 docker exec -u root airflow-webserver pip install -r /opt/airflow/requirements.txt
+# Clean up stale PID files
+docker exec -u root airflow-webserver rm -f /opt/airflow/airflow-webserver.pid
 
+# Restart Airflow webserver
+docker restart airflow-webserver
 # Copy Spark requirements.txt to spark-master
 docker cp requirements-spark.txt spark-master:/opt/spark/requirements.txt
 
@@ -55,5 +59,5 @@ docker exec airflow-webserver java -version
 # Test DAG execution - Runs a specific DAG for testing purposes
 docker exec -it airflow-webserver bash -c "airflow dags test spark_user_etl 2025-04-01"
 
-docker exec -it airflow-webserver bash -c "airflow dags test spark_rdd_job 2025-04-02"
+docker exec -it airflow-webserver bash -c "airflow dags test spark_rdd_job 2025-04-03"
 

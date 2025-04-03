@@ -9,38 +9,28 @@ def test_spark_connection():
     from pyspark.sql import Row
     
     try:
-        print("Initializing Spark connection...")
+        print("Testing Spark master connection...")
         spark = SparkSession.builder \
             .appName("TestConnection") \
             .config("spark.master", "spark://spark-master:7077") \
+            .config("spark.driver.bindAddress", "0.0.0.0") \
             .config("spark.driver.host", "airflow-webserver") \
-            .config("spark.driver.memory", "1g") \
-            .config("spark.executor.memory", "1g") \
-            .config("spark.python.worker.memory", "1g") \
-            .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer") \
-            .config("spark.python.use.daemon", "false") \
-            .config("spark.rdd.compress", "true") \
             .getOrCreate()
         
-        print("Creating test DataFrame...")
-        # Create Row object
-        # TestRow = Row("col1", "col2")
-        # data = [TestRow("Test", 1)]
-        
-        # df = spark.createDataFrame(data)
-        print("\nSpark Connection Test Results:")
-        print(f"Spark Version: {spark.version}")
-        print(f"Spark Master: {spark.sparkContext.master}")
-        print("\nTest DataFrame:")
-        # df.show()
+        # Test if we can execute a simple Spark operation
+        test_data = spark.sparkContext.parallelize([1, 2, 3, 4, 5])
+        count = test_data.count()
+        print(f"Successfully connected to Spark master!")
+        print(f"Test data count: {count}")
+        print(f"Spark master URL: {spark.sparkContext.master}")
+        print(f"Available executors: {len(spark.sparkContext._jsc.sc().statusTracker().getExecutorInfos())}")
         
         return True
     except Exception as e:
-        print(f"Error in Spark connection test: {str(e)}")
+        print(f"Error connecting to Spark master: {str(e)}")
         raise e
     finally:
         if 'spark' in locals():
-            print("Closing Spark session...")
             spark.stop()
 
 default_args = {
@@ -64,7 +54,7 @@ dag = DAG(
 # Updated Spark configuration
 spark_job = SparkSubmitOperator(
     task_id='run_spark_rdd',
-    application='/opt/spark/scripts/RDD.py',  # Updated path
+    application='/opt/spark/scripts/RDD.py',
     conn_id='spark_default',
     conf={
         'spark.master': 'spark://spark-master:7077',
@@ -73,7 +63,8 @@ spark_job = SparkSubmitOperator(
         'spark.executor.cores': '2',
         'spark.driver.cores': '1',
         'spark.python.version': '3.8',
-        'spark.submit.deployMode': 'client'
+        'spark.submit.deployMode': 'client',
+        'spark.driver.bindAddress': '0.0.0.0'  # Add this line
     },
     verbose=True,
     dag=dag
