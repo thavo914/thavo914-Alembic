@@ -6,18 +6,37 @@ RUN apk add --no-cache \
     wget \
     curl \
     python3 \
+    python3-dev \
     py3-pip \
     gcc \
     musl-dev \
-    python3-dev \
     libffi-dev \
-    openssl-dev
+    openssl-dev \
+    build-base
 
 # Set Spark version and download URL
 ENV SPARK_VERSION=3.2.4
 ENV HADOOP_VERSION=3.2
 
-# First upgrade pip and install required Python packages
+# Install Python 3.8
+RUN wget https://www.python.org/ftp/python/3.8.18/Python-3.8.18.tgz && \
+    tar xzf Python-3.8.18.tgz && \
+    cd Python-3.8.18 && \
+    ./configure --prefix=/usr --enable-optimizations && \
+    make && make install && \
+    cd .. && rm -rf Python-3.8.18*
+
+# Create Python symlinks
+RUN ln -sf /usr/bin/python3.8 /usr/bin/python && \
+    ln -sf /usr/bin/python3.8 /usr/bin/python3 && \
+    ln -sf /usr/bin/pip3.8 /usr/bin/pip && \
+    ln -sf /usr/bin/pip3.8 /usr/bin/pip3
+
+# Set Python environment variables
+ENV PYSPARK_PYTHON=/usr/bin/python3
+ENV PYSPARK_DRIVER_PYTHON=/usr/bin/python3
+
+# Install Python packages
 RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir \
     pyspark==${SPARK_VERSION} \

@@ -1,8 +1,8 @@
-FROM apache/airflow:2.7.1
+FROM apache/airflow:2.9.1
 
 USER root
 RUN apt-get update && \
-    apt-get install -y wget && \
+    apt-get install -y wget gcc python3-dev build-essential && \
     wget https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_linux-x64_bin.tar.gz && \
     tar -xvzf openjdk-11+28_linux-x64_bin.tar.gz && \
     mv jdk-11 /opt/ && \
@@ -14,6 +14,9 @@ RUN apt-get update && \
 ENV JAVA_HOME=/opt/jdk-11
 ENV PATH=$JAVA_HOME/bin:$PATH
 
+# Copy requirements and set permissions
 COPY --chown=airflow:root requirements-airflow.txt /opt/airflow/requirements.txt
+
+# Switch to airflow user for pip installation
 USER airflow
 RUN pip install --no-cache-dir -r /opt/airflow/requirements.txt
