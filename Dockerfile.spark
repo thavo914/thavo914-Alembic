@@ -2,17 +2,24 @@ FROM bitnami/spark:3.4.1
 
 USER root
 RUN apt-get update && \
-    apt-get install -y wget gcc python3-dev build-essential software-properties-common && \
+    apt-get install -y wget gcc python3-dev build-essential software-properties-common libffi-dev \
+    libssl-dev openssl && \
     wget https://www.python.org/ftp/python/3.12.3/Python-3.12.3.tgz && \
     tar -xf Python-3.12.3.tgz && \
     cd Python-3.12.3 && \
-    ./configure --enable-optimizations && \
+    ./configure --enable-optimizations --enable-loadable-sqlite-extensions --with-system-ffi --with-ssl && \
     make -j $(nproc) && \
-    make altinstall && \
+    make install && \
     cd .. && rm -rf Python-3.12.3* && \
-    ln -sf /usr/local/bin/python3.12 /usr/bin/python3 && \
-    ln -sf /usr/local/bin/pip3.12 /usr/bin/pip3 && \
-    wget https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_linux-x64_bin.tar.gz && \
+    rm -f /opt/bitnami/python/bin/python3 && \
+    rm -f /opt/bitnami/python/bin/pip3 && \
+    ln -sf /usr/local/bin/python3.12 /opt/bitnami/python/bin/python3 && \
+    ln -sf /usr/local/bin/pip3.12 /opt/bitnami/python/bin/pip3 && \
+    python3 -m ensurepip && \
+    pip3 install --upgrade pip
+
+# Install Java 11
+RUN wget https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_linux-x64_bin.tar.gz && \
     tar -xvzf openjdk-11+28_linux-x64_bin.tar.gz && \
     mv jdk-11 /opt/ && \
     rm openjdk-11+28_linux-x64_bin.tar.gz && \
@@ -24,15 +31,14 @@ RUN mkdir -p /opt/bitnami/spark/conf && \
     touch /opt/bitnami/spark/conf/spark-env.sh && \
     echo 'export JAVA_HOME=/opt/jdk-11' >> /opt/bitnami/spark/conf/spark-env.sh && \
     echo 'export PATH=$JAVA_HOME/bin:$PATH' >> /opt/bitnami/spark/conf/spark-env.sh && \
-    echo 'export PYSPARK_PYTHON=/usr/bin/python3' >> /opt/bitnami/spark/conf/spark-env.sh && \
-    echo 'export PYSPARK_DRIVER_PYTHON=/usr/bin/python3' >> /opt/bitnami/spark/conf/spark-env.sh && \
-    chown -R 1001:root /opt/bitnami && \
-    chmod -R g+rwX /opt/bitnami
+    echo 'export PYSPARK_PYTHON=/opt/bitnami/python/bin/python3' >> /opt/bitnami/spark/conf/spark-env.sh && \
+    echo 'export PYSPARK_DRIVER_PYTHON=/opt/bitnami/python/bin/python3' >> /opt/bitnami/spark/conf/spark-env.sh
 
+# Set up Python environment and install requirements
 COPY requirements-spark.txt /opt/bitnami/spark/requirements.txt
-RUN chown -R 1001:root /opt/bitnami/spark && \
-    chmod -R 755 /opt/bitnami/spark && \
-    pip3 install --upgrade pip && \
-    pip3 install --no-cache-dir -r /opt/bitnami/spark/requirements.txt
+RUN mkdir -p /opt/bitnami/python && \
+    chown -R 1001:root /opt/bitnami && \
+    chmod -R 755 /opt/bitnami && \
+    /opt/bitnami/python/bin/pip3 install --no-cache-dir -r /opt/bitnami/spark/requirements.txt
 
 USER 1001
