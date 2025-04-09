@@ -55,8 +55,20 @@ MSSQL_CONFIG = {
     'driver': os.getenv('MSSQL_DRIVER')
 }
 
+# Add Remote MySQL Configuration
+REMOTE_MYSQL_CONFIG = {
+    'host': os.getenv('REMOTE_MYSQL_HOST'),
+    'port': os.getenv('REMOTE_MYSQL_PORT'),
+    'database': os.getenv('REMOTE_MYSQL_DATABASE'),
+    'user': os.getenv('REMOTE_MYSQL_USER'),
+    'password': os.getenv('REMOTE_MYSQL_PASSWORD')
+}
+
 def get_mysql_jdbc_url():
     return f"jdbc:mysql://{MYSQL_CONFIG['host']}:{MYSQL_CONFIG['port']}/{MYSQL_CONFIG['database']}"
+
+def get_remote_mysql_jdbc_url():
+    return f"jdbc:mysql://{REMOTE_MYSQL_CONFIG['host']}:{REMOTE_MYSQL_CONFIG['port']}/{REMOTE_MYSQL_CONFIG['database']}"
 
 def get_mssql_jdbc_url():
     return f"jdbc:sqlserver://{MSSQL_CONFIG['host']}:{MSSQL_CONFIG['port']};database={MSSQL_CONFIG['database']};trustServerCertificate=true"

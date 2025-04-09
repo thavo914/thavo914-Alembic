@@ -17,6 +17,9 @@ latest
 *.xlsx
 *.csv
 *.xml
+# Environment files
+.env
+*/.env
 *.env
 
 # Python compiled files

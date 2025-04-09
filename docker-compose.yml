@@ -1,19 +1,4 @@
 services:
-  mysql:
-    image: mysql:8.0.39
-    container_name: mysql_8_0
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: test_db
-      MYSQL_USER: thangvo
-      MYSQL_PASSWORD: thangvo123
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql-data:/var/lib/mysql
-    networks:
-      - app-network
-
   spark-master:
     build:
       context: .
@@ -26,6 +11,7 @@ services:
       - "7077:7077"
     volumes:
       - ./Spark/Scripts:/opt/spark/scripts  # Changed from /opt/bitnami/spark/scripts
+      - ./Spark/config:/opt/spark/config  # Add this line
     networks:
       - app-network
 
@@ -39,6 +25,7 @@ services:
       - SPARK_MASTER_URL=spark://spark-master:7077
     volumes:
       - ./Spark/Scripts:/opt/spark/scripts  # Added volume mount to worker
+      - ./Spark/config:/opt/spark/config
     depends_on:
       - spark-master
     networks:
@@ -74,6 +61,7 @@ services:
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./Spark/Scripts:/opt/spark/scripts
+      - ./Spark/config:/opt/spark/config
       - ./airflow/config:/opt/airflow
     ports:
       - "8081:8080"
@@ -96,6 +84,7 @@ services:
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./Spark/Scripts:/opt/spark/scripts
+      - ./Spark/config:/opt/spark/config 
       - ./airflow/config:/opt/airflow
     command: scheduler
     networks:
