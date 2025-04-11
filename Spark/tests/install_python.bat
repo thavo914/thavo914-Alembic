@@ -7,6 +7,7 @@ echo.
 echo Verifying Python installation...
 docker exec -it spark-master /opt/bitnami/python/bin/python3 --version
 docker exec -it spark-master python3 --version
+docker exec -it airflow-webserver python3 --version
 
 echo.
 echo Verifying pip installation...
@@ -14,7 +15,7 @@ docker exec -it spark-master /opt/bitnami/python/bin/pip3 --version
 
 echo.
 echo Testing Python ctypes...
-docker exec -it spark-master /opt/bitnami/python/bin/python3 -c "import ctypes; print('ctypes available')"
+docker exec -it spark-master /opt/python/bin/python3 -c "import ctypes; print('ctypes available')"
 
 echo.
 echo Installation and verification complete.
