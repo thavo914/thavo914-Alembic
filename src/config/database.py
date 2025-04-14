@@ -50,8 +50,8 @@ class DatabaseConfig:
     def get_stag_saas_url(self):
         return f"mysql+pymysql://{self.stag_saas_user}:{self.stag_saas_password}@{self.stag_saas_host}:3306/in"
     
-    def get_dev_kim_url(self):
-        return f"mysql+pymysql://{self.dev_kim_user}:{self.dev_kim_password}@{self.dev_kim_host}:3306/in"
+    def get_dev_kim_url(self, database='in'):
+        return f"mysql+pymysql://{self.dev_kim_user}:{self.dev_kim_password}@{self.dev_kim_host}:3306/{database}"
     
     def get_dev_saas_url(self):
         return f"mysql+pymysql://{self.dev_saas_user}:{self.dev_saas_password}@{self.dev_saas_host}:3306/in"
