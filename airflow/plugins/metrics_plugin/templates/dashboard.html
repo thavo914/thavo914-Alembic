@@ -1,0 +1,22 @@
+{% extends "appbuilder/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Airflow Metrics Dashboard</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">DAG Run Statistics</h3>
+                </div>
+                <div class="panel-body">
+                    <p><strong>Time Range:</strong> {{ metrics.start_date.strftime('%Y-%m-%d %H:%M') }} to {{ metrics.end_date.strftime('%Y-%m-%d %H:%M') }}</p>
+                    <p><strong>Total Runs:</strong> {{ metrics.total_runs }}</p>
+                    <p><strong>Successful Runs:</strong> {{ metrics.success_count }}</p>
+                    <p><strong>Success Rate:</strong> {{ metrics.success_rate }}%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
