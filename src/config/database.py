@@ -44,23 +44,24 @@ class DatabaseConfig:
         self.mssql_password = quote_plus(os.getenv('MSSQL_PASSWORD'))
         self.mssql_driver = quote_plus(os.getenv('MSSQL_DRIVER'))
 
-    def get_stag_kim_url(self):
-        return f"mysql+pymysql://{self.stag_kim_user}:{self.stag_kim_password}@{self.stag_kim_host}:3306/in"
+    def get_stag_kim_url(self, database='in'):
+        return f"mysql+pymysql://{self.stag_kim_user}:{self.stag_kim_password}@{self.stag_kim_host}:3306/{database}"
     
-    def get_stag_saas_url(self):
-        return f"mysql+pymysql://{self.stag_saas_user}:{self.stag_saas_password}@{self.stag_saas_host}:3306/in"
+    def get_stag_saas_url(self, database='in'):
+        return f"mysql+pymysql://{self.stag_saas_user}:{self.stag_saas_password}@{self.stag_saas_host}:3306/{database}"
     
     def get_dev_kim_url(self, database='in'):
         return f"mysql+pymysql://{self.dev_kim_user}:{self.dev_kim_password}@{self.dev_kim_host}:3306/{database}"
     
-    def get_dev_saas_url(self):
-        return f"mysql+pymysql://{self.dev_saas_user}:{self.dev_saas_password}@{self.dev_saas_host}:3306/in"
+    def get_dev_saas_url(self, database='in'):
+        return f"mysql+pymysql://{self.dev_saas_user}:{self.dev_saas_password}@{self.dev_saas_host}:3306/{database}"
     
-    def get_local_url(self):
-        return f"mysql+pymysql://{self.local_user}:{self.local_password}@{self.local_host}:{self.local_port}/{self.local_database}"
+    def get_local_url(self, database=None):
+        db = database if database else self.local_database
+        return f"mysql+pymysql://{self.local_user}:{self.local_password}@{self.local_host}:{self.local_port}/{db}"
         
-    def get_prod_kim_url(self):
-        return f"mysql+pymysql://{self.prod_kim_user}:{self.prod_kim_password}@{self.prod_kim_host}:3306/in"
+    def get_prod_kim_url(self, database='in'):
+        return f"mysql+pymysql://{self.prod_kim_user}:{self.prod_kim_password}@{self.prod_kim_host}:3306/{database}"
     
     def get_mssql_url(self):
         return f"mssql+pyodbc://{self.mssql_username}:{self.mssql_password}@{self.mssql_host}:{self.mssql_port}/{self.mssql_database}?driver={self.mssql_driver}"
