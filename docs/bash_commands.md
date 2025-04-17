@@ -45,7 +45,7 @@ docker exec -u root airflow-webserver pip install -r /opt/airflow/requirements.t
 docker exec -u root airflow-webserver rm -f /opt/airflow/airflow-webserver.pid
 
 # Restart Airflow webserver
-docker restart airflow-webserver
+docker restart airflow-webserver airflow-scheduler
 # Copy Spark requirements.txt to spark-master
 docker cp requirements-spark.txt spark-master:/opt/spark/requirements.txt
 
